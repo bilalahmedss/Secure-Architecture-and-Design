@@ -99,7 +99,7 @@ The architecture enforces six trust boundaries that separate zones of differing 
 
 The logical architecture follows a layered, defense-in-depth model:
 
-![Task 1 Architecture](task 1.png)
+![Task 1 Architecture](task1.png)
 
 ---
 
@@ -145,65 +145,7 @@ Each threat is documented with its affected component, a description of the atta
 
 The following annotated architecture diagram maps each threat to its affected component and location in the system. Threat IDs reference the Threat Model Table in Section 3.3.
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│           EXTERNAL USERS / INTERNET (UNTRUSTED ZONE)                │
-│  Customer ──► [T-01 Spoofing]  Merchant ──► [T-02 Spoofing]        │
-│  Admin ──────► [T-03 Spoofing]                                      │
-└────────────────────────────┬────────────────────────────────────────┘
-                             │ HTTPS / TLS 1.3
-                    ┌────────▼────────┐
-                    │ WAF / DDoS Layer│◄─── [T-09: DoS — API Exhaustion]
-                    └────────┬────────┘
-                             │
-          ┌──────────────────▼──────────────────────────┐
-          │  API GATEWAY [TB1]                          │
-          │  [T-04: EoP — Token Impersonation]          │
-          │  [T-09: DoS — Resource Exhaustion]          │
-          └──────┬─────────────────┬───────────┬────────┘
-                 │                 │           │
-          ┌──────▼──────┐  ┌───────▼───────┐  ┌──────▼──────────┐
-          │ API Backend │  │Payment Service│  │  Admin Service  │
-          │             │  │[T-05: EoP]    │  │ [T-13: EoP]     │
-          └──────┬──────┘  └───────┬───────┘  │ [T-14: Repud.]  │
-                 │                 │           └──────────────────┘
-                 │         ┌───────▼────────┐          ▲
-                 │         │ Payment Proc.  │          │ VPN + MFA only
-                 │         │  (External)    │          │
-                 │         └───────┬────────┘    Admin Portal
-                 │                 │
-                 │         ┌───────▼──────────────┐
-                 │         │    Webhook Handler    │
-                 │         │ [T-08: EoP—Forged CB] │
-                 │         │ [T-10: DoS—Exhaustion]│
-                 │         └───────┬───────────────┘
-                 │                 │
-┌───────────────────────────────────────────────────────────┐
-│  PRIVATE DATA ZONE [TB4]                                  │
-│  ┌─────────────┐  ┌──────────────────┐  ┌─────────────┐  │
-│  │   User DB   │  │  Transaction DB  │  │ Merchant DB │  │
-│  │             │  │ [T-06: Spoofing] │  │             │  │
-│  └─────────────┘  │ [T-07: Tampering]│  └─────────────┘  │
-│                   └──────────────────┘                    │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │  Audit Log Store                                   │   │
-│  │  [T-11: Tampering — Log Modification]              │   │
-│  └────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────┘
-                             │
-          ┌──────────────────▼──────────────────────────────┐
-          │  SIEM / Monitoring Pipeline                     │
-          │  [T-12: DoS — Alert Flooding / Monitor Bypass]  │
-          └─────────────────────────────────────────────────┘
-```
-
-**Legend:**
-- [T-xx: Spoofing] — Identity-based impersonation threats (Authentication, Data Storage)
-- [T-xx: EoP] — Elevation of Privilege threats (Authorization, Administrative Access)
-- [T-xx: DoS] — Denial of Service threats (API Communication, Logging & Monitoring)
-- [T-xx: Tampering] — Data integrity threats (Data Storage, Logging & Monitoring)
-- [T-xx: Repudiat.] — Repudiation threats (Administrative Access)
-- [TB1–TB6] — Trust Boundary identifiers (see Section 1.5)
+![Task 3 Threat Diagram](ThreatModel.png)
 
 ## 3.3 Threat Model Table
 
@@ -238,7 +180,7 @@ The analysis reveals several structural patterns in the threat landscape of this
 ---
 
 # Task 4. Secure Architecture Design
-
+![Task 4 Secured Architecture](task4.png)
 ## 4.1 Identity and Access Management
 
 A centralized User Identity Provider (IdP) implementing OIDC/OAuth2 handles authentication for customers and merchants, eliminating credential sprawl and standardizing token issuance. A dedicated Admin IdP with mandatory multi-factor authentication governs administrative access, reflecting the higher impact of admin session compromise.
