@@ -99,27 +99,7 @@ The architecture enforces six trust boundaries that separate zones of differing 
 
 The logical architecture follows a layered, defense-in-depth model:
 
-```
-[ INTERNET ]
-| HTTPS / TLS 1.3
-[ WAF / DDoS Protection Layer ]
-|
-[ API Gateway + Auth Middleware ] <── [ Identity Provider (OIDC / OAuth2) ]
-| JWT validation · Rate limiting · Request routing
-
-┌─────────────────────────────────────────────────────┐
-│              BACKEND SERVICES ZONE                  │
-│  API Backend · Payment Service · Webhook Handler    │
-│  Admin Service (via VPN + Admin IdP only)           │
-└─────────────────────────────────────────────────────┘
-| (Service-to-DB only; no direct external access)
-
-┌─────────────────────────────────────────────────────┐
-│                PRIVATE DATA ZONE                    │
-│  User DB · Merchant DB · Transaction DB · Audit Log │
-└─────────────────────────────────────────────────────┘
-↑ AES-256 Encryption at Rest · KMS/HSM Key Management
-```
+![Task 1 Architecture](task 1.png)
 
 ---
 
